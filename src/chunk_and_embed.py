@@ -22,7 +22,7 @@ EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 VECTOR_STORE_DIR = "../vector_store"
 
 # Load cleaned data
-filtered = pd.read_csv("../data/filtered_complaints.csv")
+filtered = pd.read_csv("data/filtered_complaints.csv")
 
 # Chunking
 splitter = RecursiveCharacterTextSplitter(
