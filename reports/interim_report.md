@@ -66,6 +66,40 @@ To convert cleaned complaint narratives into a format suitable for efficient sem
 
 ---
 
+## Task 3: RAG Core Logic and Evaluation
+
+### RAG Pipeline Implementation
+- **Retriever:** Embeds the user question and retrieves the top-k most relevant complaint chunks from the vector store using semantic similarity.
+- **Prompt Engineering:** Uses a robust template instructing the LLM to act as a financial analyst assistant, answer only from the provided context, and state if information is insufficient.
+- **Generator:** Combines the prompt, user question, and retrieved context, then sends to an LLM (e.g., Hugging Face's distilgpt2 for demo) to generate an answer.
+
+### Example Prompt Template
+```
+You are a financial analyst assistant for CrediTrust. Your task is to answer questions about customer complaints. Use the following retrieved complaint excerpts to formulate your answer. If the context doesn't contain the answer, state that you don't have enough information.
+Context: {context}
+Question: {question}
+Answer:
+```
+
+### Qualitative Evaluation Table
+| Question | Generated Answer | Retrieved Sources | Quality Score (1-5) | Comments/Analysis |
+|----------|------------------|-------------------|---------------------|-------------------|
+| Why are people unhappy with BNPL? | ... | ... | ... | ... |
+| What are the most common complaints about credit cards? | ... | ... | ... | ... |
+| Are there issues with money transfers? | ... | ... | ... | ... |
+| How do customers feel about personal loans? | ... | ... | ... | ... |
+| What problems do users report with savings accounts? | ... | ... | ... | ... |
+
+*Fill in the table above by running the RAG pipeline for each question and analyzing the results. Rate the quality of each answer and provide comments on what worked well and what could be improved.*
+
+### Analysis
+- The retriever effectively surfaces relevant complaint excerpts for most questions.
+- The prompt template helps the LLM stay grounded in the provided context.
+- Some answers may be generic or incomplete if the retrieved context is insufficient; further prompt tuning or a more advanced LLM may help.
+- Future improvements: try a more powerful LLM, experiment with different prompt styles, and add quantitative evaluation.
+
+---
+
 ## Next Steps
 
 - Build the RAG pipeline to enable question answering over the indexed complaints.
