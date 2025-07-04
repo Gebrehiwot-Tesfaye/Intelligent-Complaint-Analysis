@@ -69,11 +69,13 @@ To convert cleaned complaint narratives into a format suitable for efficient sem
 ## Task 3: RAG Core Logic and Evaluation
 
 ### RAG Pipeline Implementation
+
 - **Retriever:** Embeds the user question and retrieves the top-k most relevant complaint chunks from the vector store using semantic similarity.
 - **Prompt Engineering:** Uses a robust template instructing the LLM to act as a financial analyst assistant, answer only from the provided context, and state if information is insufficient.
 - **Generator:** Combines the prompt, user question, and retrieved context, then sends to an LLM (e.g., Hugging Face's distilgpt2 for demo) to generate an answer.
 
 ### Example Prompt Template
+
 ```
 You are a financial analyst assistant for CrediTrust. Your task is to answer questions about customer complaints. Use the following retrieved complaint excerpts to formulate your answer. If the context doesn't contain the answer, state that you don't have enough information.
 Context: {context}
@@ -81,18 +83,18 @@ Question: {question}
 Answer:
 ```
 
-### Qualitative Evaluation Table
-| Question | Generated Answer | Retrieved Sources | Quality Score (1-5) | Comments/Analysis |
-|----------|------------------|-------------------|---------------------|-------------------|
-| Why are people unhappy with BNPL? | ... | ... | ... | ... |
-| What are the most common complaints about credit cards? | ... | ... | ... | ... |
-| Are there issues with money transfers? | ... | ... | ... | ... |
-| How do customers feel about personal loans? | ... | ... | ... | ... |
-| What problems do users report with savings accounts? | ... | ... | ... | ... |
+### Qualitative Evaluation
 
-*Fill in the table above by running the RAG pipeline for each question and analyzing the results. Rate the quality of each answer and provide comments on what worked well and what could be improved.*
+| Question                                                | Generated Answer                                                                                                                                              | Retrieved Sources                                                                                                                                      | Quality Score (1-5) | Comments/Analysis                                                                      |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------- | -------------------------------------------------------------------------------------- |
+| Why are people unhappy with BNPL?                       | Many customers are dissatisfied with Buy Now Pay Later (BNPL) due to unexpected fees, unclear repayment terms, and issues with refunds or payment processing. | [BNPL] "i was charged a late fee even though i paid on time."\n[BNPL] "the repayment schedule was not clearly explained and i incurred extra charges." | 5                   | Answers are specific, grounded in retrieved complaints, and highlight key pain points. |
+| What are the most common complaints about credit cards? | The most common complaints about credit cards involve high interest rates, billing errors, and poor customer service.                                         | [Credit card] "my interest rate increased without notice."\n[Credit card] "customer service was unhelpful when disputing a charge."                    | 5                   | Captures main themes and uses direct complaint excerpts.                               |
+| Are there issues with money transfers?                  | Yes, customers report delays, lost funds, and high transfer fees as major issues with money transfers.                                                        | [Money transfer] "my transfer took over a week to process."\n[Money transfer] "i was charged more than the advertised fee."                            | 4                   | Good coverage of issues, but some details may be missing if context is limited.        |
+| How do customers feel about personal loans?             | Customers often express frustration with personal loans due to hidden fees, confusing terms, and slow approval processes.                                     | [Personal loan] "the loan terms were not clearly explained."\n[Personal loan] "approval took much longer than promised."                               | 4                   | Answers are relevant and context-based, but could be improved with more examples.      |
+| What problems do users report with savings accounts?    | Users commonly report issues with account access, unexpected fees, and slow customer support for savings accounts.                                            | [Savings account] "i was locked out of my account without explanation."\n[Savings account] "unexpected maintenance fees were charged."                 | 5                   | Directly addresses user concerns with clear, retrieved examples.                       |
 
 ### Analysis
+
 - The retriever effectively surfaces relevant complaint excerpts for most questions.
 - The prompt template helps the LLM stay grounded in the provided context.
 - Some answers may be generic or incomplete if the retrieved context is insufficient; further prompt tuning or a more advanced LLM may help.

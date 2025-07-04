@@ -1,79 +1,91 @@
-# Intelligent Complaint Analysis for Financial Services
+# CrediTrust Intelligent Complaint Analysis (RAG System)
 
-This project builds a Retrieval-Augmented Generation (RAG) chatbot to turn customer complaints into actionable insights for CrediTrust Financial. The solution enables product, support, and compliance teams to quickly understand pain points across five major product categories:
-
-- Credit Cards
-- Personal Loans
-- Buy Now, Pay Later (BNPL)
-- Savings Accounts
-- Money Transfers
-
-## Project Structure
-
-- `data/` — Raw and processed datasets (excluded from version control)
-- `notebooks/` — Jupyter notebooks for EDA and prototyping
-- `src/` — Source code for data processing, embedding, retrieval, and chatbot logic
-- `vector_store/` — Persisted vector database for semantic search
-- `reports/` — Project reports and documentation
-- `tests/` — Unit and integration tests
-
-## Setup
-
-1. Clone the repository and create a Python virtual environment (e.g., `python -m venv venv`).
-2. Install dependencies: `pip install -r requirements.txt`
-3. Place the original CFPB complaints dataset as `data/complaints.csv` (this folder is gitignored).
-
-## Task 1: Exploratory Data Analysis (EDA) and Preprocessing
-
-### Objective
-To understand the structure, content, and quality of the complaint data and prepare it for downstream RAG processing.
-
-### Steps
-- Loaded the CFPB complaints dataset and explored its structure, columns, and sample records.
-- Analyzed the distribution of complaints across different products, and the length of complaint narratives.
-- Identified and removed records with missing or empty narratives.
-- Filtered the dataset to include only the five target products: Credit card, Personal loan, Buy Now, Pay Later, Savings account, and Money transfer.
-- Cleaned the text by lowercasing, removing special characters, boilerplate phrases, and extra spaces to improve embedding quality.
-
-### Output
-- Cleaned and filtered data saved as `data/filtered_complaints.csv`.
-- All EDA and preprocessing steps are documented in `notebooks/eda_preprocessing.ipynb`.
-
-## Task 2: Text Chunking, Embedding, and Vector Store Indexing
-
-### Objective
-To convert cleaned complaint narratives into a format suitable for efficient semantic search and retrieval using vector embeddings.
-
-### Chunking Strategy
-- Long narratives are split into overlapping chunks using LangChain's `RecursiveCharacterTextSplitter`.
-- Parameters: `chunk_size=300` characters, `chunk_overlap=50` characters. This ensures each chunk is large enough to provide context but small enough for effective embedding and retrieval.
-- The chunking strategy was chosen after experimenting with different sizes to balance context retention and search granularity. Overlap helps preserve meaning across chunk boundaries.
-
-### Embedding Model Choice
-- The model `sentence-transformers/all-MiniLM-L6-v2` was selected for its strong performance, speed, and open-source availability.
-- This model is widely used for semantic search and provides high-quality embeddings for short to medium-length texts, making it ideal for complaint narratives.
-- The model is lightweight, fast to run on CPU, and has been benchmarked for semantic similarity tasks.
-
-### Embedding and Indexing Process
-- Each chunk is embedded using the selected model.
-- Embeddings and metadata (complaint ID, product) are stored in a ChromaDB vector store, which supports fast similarity search.
-- The vector store is persisted in the `vector_store/` directory for efficient retrieval in downstream RAG applications.
-- Metadata storage ensures that retrieved chunks can always be traced back to their original complaint and product category.
-
-### Output
-- Script: `src/chunk_and_embed.py` performs chunking, embedding, and indexing.
-- Vector store: `vector_store/` contains the persisted database, ready for semantic search and RAG-based question answering.
-
-## Outputs
-- Cleaned dataset: `data/filtered_complaints.csv`
-- Vector store: `vector_store/`
-- Reports: `reports/`
-
-## Next Steps
-- Build the RAG pipeline for question answering, leveraging the vector store for context retrieval.
-- Develop a user interface for internal stakeholders to interact with the system.
-- Evaluate and iterate on chunking/embedding strategies based on retrieval quality and user feedback.
+A professional, end-to-end Retrieval-Augmented Generation (RAG) system for CrediTrust Financial to analyze customer complaints. This project enables internal teams to extract actionable insights from unstructured complaint narratives using state-of-the-art NLP and LLMs, with a public Gradio chat interface.
 
 ---
 
-For details, see the interim report in `reports/interim_report.md`.
+## Features
+
+- **Data Preprocessing & EDA:** Cleans and prepares complaint data for semantic search.
+- **Chunking & Embedding:** Splits narratives, generates embeddings, and indexes with ChromaDB for fast retrieval.
+- **RAG Pipeline:** Combines robust retrieval, prompt engineering, and LLM-based answer generation (Flan-T5).
+- **Interactive Chatbot:** Gradio-based UI for public/internal use, supporting real-time Q&A.
+- **Documentation:** Comprehensive interim and final reports, with screenshots and analysis.
+
+---
+
+## Project Structure
+
+```
+Intelligent-Complaint-Analysis/
+├── app.py                  # Gradio chat interface
+├── data/                   # Raw and processed data
+├── notebooks/              # EDA, preprocessing, and demo notebooks
+├── reports/                # Interim and final reports, screenshots
+├── src/                    # Core scripts: chunking, embedding, RAG pipeline
+├── tests/                  # (Optional) Unit tests
+├── vector_store/           # Persisted ChromaDB vector store
+├── requirements.txt        # Python dependencies
+└── README.md               # Project overview and instructions
+```
+
+---
+
+## Setup
+
+1. **Clone the repository:**
+   ```bash
+   git clone <repo-url>
+   cd Intelligent-Complaint-Analysis
+   ```
+2. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. **Prepare data:**
+   - Place raw complaint data in `data/`.
+   - Run EDA/preprocessing notebook: `notebooks/eda_preprocessing.ipynb`.
+   - Run chunking/embedding script: `src/chunk_and_embed.py` (creates/updates `vector_store/`).
+4. **Run the Gradio app:**
+   ```bash
+   python app.py
+   ```
+   - The app will launch in your browser. Use `share=True` for public links.
+
+---
+
+## Usage
+
+- Ask any question about customer complaints in the chat interface.
+- The AI will retrieve relevant complaint excerpts and generate a grounded answer.
+- (Optional) Toggle sources for transparency.
+- For demonstration, see screenshots/GIFs in `reports/`.
+
+---
+
+## Reports & Documentation
+
+- **Interim Report:** `reports/interim_report.md`
+- **Final Report:** `reports/final_report.md`
+- **Notebooks:** EDA, preprocessing, and demo in `notebooks/`
+
+---
+
+## Recommendations & Next Steps
+
+- Integrate more advanced LLMs (e.g., OpenAI GPT-4).
+- Add streaming responses and user feedback loop.
+- Quantitative evaluation and continuous improvement.
+
+---
+
+## License
+
+MIT License. See `LICENSE` for details.
+
+---
+
+## Acknowledgements
+
+- Hugging Face, LangChain, ChromaDB, Gradio, and the open-source community.
+- CrediTrust Financial for project support and feedback.
