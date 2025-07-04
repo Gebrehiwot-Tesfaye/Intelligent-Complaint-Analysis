@@ -47,10 +47,10 @@ def build_prompt(context_chunks: List[tuple], question: str) -> str:
 def generate_answer(prompt: str) -> str:
     try:
         from transformers import pipeline
-        # Use a more powerful open-source instruction-tuned LLM for QA
-        generator = pipeline("text2text-generation", model="google/flan-t5-large")
-        output = generator(prompt, max_new_tokens=256, truncation=True)
-        return output[0]["generated_text"].strip()
+        # Use a small open-source LLM for demo (e.g., distilgpt2)
+        generator = pipeline("text-generation", model="distilgpt2")
+        output = generator(prompt, max_length=256, do_sample=True, temperature=0.7)
+        return output[0]["generated_text"][len(prompt):].strip()
     except ImportError:
         return "[ERROR] transformers not installed. Please install with 'pip install transformers'."
     except Exception as e:
